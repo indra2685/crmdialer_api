@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // User Api 
     Route::get('user/details/{uid?}', [UserController::class, 'getuser']);
+    Route::get('user/get', [UserController::class, 'getallusers']);
     Route::post('user/update/{uid}', [UserController::class, 'update']);
     Route::post('password-reset', [UserController::class, 'updatePassword']);
     Route::delete('user/delete/{uid}', [UserController::class, 'delete']);

@@ -30,10 +30,20 @@ class UserController extends Controller
 
     }
 
+    public function getallusers()
+    {
+        $user = auth()->user()->id;
+        $user_details = User::where('created_by', '=', $user)->get();
+        return response()->json([
+            'status' => true,
+            'data' => $user_details,
+            'message' => "Successfully get user details."
+        ]);
+    }
     public function update(Request $request, $uid)
     {
         $user = User::where('uid', '=', $uid)->first();
-        if(!empty($user)){
+        if (!empty($user)) {
 
             $user->first_name  = $request->first_name;
             $user->last_name = $request->last_name;
@@ -46,17 +56,17 @@ class UserController extends Controller
             $user->state   = $request->state;
             $user->city   = $request->city;
             $user->save();
-    
+
             return response()->json([
                 'status' => true,
                 'data' => $user,
                 'message' => "Successfully user update."
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => true,
                 'message' => "User Not found."
-            ],500);
+            ], 500);
         }
     }
     public function updatePassword(Request $request)

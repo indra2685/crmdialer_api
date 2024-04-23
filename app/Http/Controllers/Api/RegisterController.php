@@ -37,6 +37,8 @@ class RegisterController extends BaseController
                 $input['password'] = bcrypt($input['password']);
                 if(auth()->user()->role == 'ADMIN'){
                     $input['role'] = 'MANAGER';
+
+                    
                 } else {
                     $input['role'] = 'AGENT';
                 }

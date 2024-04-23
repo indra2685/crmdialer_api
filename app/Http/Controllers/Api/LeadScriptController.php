@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Lead_script;
 use App\Models\User;
+use App\Models\Lead_script;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,7 +30,7 @@ class LeadScriptController extends Controller
     public function show($id)
     {
         $lead_scripts = Lead_script::find($id);
-        
+
         return response()->json([
             'status' => true,
             'data' => $lead_scripts,
@@ -55,19 +56,27 @@ class LeadScriptController extends Controller
                 'error' => $messages,
             ], 500);
         }
-        $lead_scripts              = new Lead_script();
-        $lead_scripts->script_name = $request->script_name;
-        $lead_scripts->script      = $request->script;
-        $lead_scripts->desc        = $request->script_name;
-        $lead_scripts->id_user     = \Auth::user()->id;
-        $lead_scripts->created_by  = \Auth::user()->created_by;
-        $lead_scripts->save();
+        try {
+            $lead_scripts              = new Lead_script();
+            $lead_scripts->script_name = $request->script_name;
+            $lead_scripts->script      = $request->script;
+            $lead_scripts->desc        = $request->script_name;
+            $lead_scripts->id_user     = \Auth::user()->id;
+            $lead_scripts->created_by  = \Auth::user()->created_by;
+            $lead_scripts->save();
 
-        return response()->json([
-            'status' => true,
-            'data' => $lead_scripts,
-            'message' => "Lead Script Successfully Created.",
-        ]);
+            return response()->json([
+                'status' => true,
+                'data' => $lead_scripts,
+                'message' => "Lead Script Successfully Created.",
+            ]);
+        } catch (\Exception $e) {
+            $rorf = Log::error('' . $e->getMessage());
+            return response()->json([
+                'status' => true,
+                'message' => $e,
+            ], 500);
+        }
     }
 
     public function update(Request $request, $id)
@@ -92,17 +101,25 @@ class LeadScriptController extends Controller
                     'error' => $messages,
                 ]);
             }
+            try {
 
-            $lead_scripts->script_name = $request->script_name;
-            $lead_scripts->script      = $request->script;
-            $lead_scripts->desc        = $request->script_name;
-            $lead_scripts->save();
+                $lead_scripts->script_name = $request->script_name;
+                $lead_scripts->script      = $request->script;
+                $lead_scripts->desc        = $request->script_name;
+                $lead_scripts->save();
 
-            return response()->json([
-                'status' => true,
-                'data' => $lead_scripts,
-                'message' => "Lead Script Successfully updated.",
-            ]);
+                return response()->json([
+                    'status' => true,
+                    'data' => $lead_scripts,
+                    'message' => "Lead Script Successfully updated.",
+                ]);
+            } catch (\Exception $e) {
+                $rorf = Log::error('' . $e->getMessage());
+                return response()->json([
+                    'status' => true,
+                    'message' => $e,
+                ], 500);
+            }
         } else {
             return response()->json([
                 'status' => true,
