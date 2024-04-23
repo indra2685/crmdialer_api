@@ -59,8 +59,8 @@ class SmsTempController extends Controller
         $smstemp->name = $request->name;
         $smstemp->template = $request->template;
         $smstemp->characters = strlen($request->template);
-        $smstemp->id_user = \Auth::user()->id;
-        $smstemp->created_by = \Auth::user()->created_by;
+        $smstemp->id_user = auth()->user()->id;
+        $smstemp->created_by = auth()->user()->created_by;
         $smstemp->save();
 
         return response()->json([
